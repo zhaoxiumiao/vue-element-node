@@ -4,9 +4,10 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan')
 const jwtAuth = require('./routes/jwt')
 const Result = require('./models/Result')
-
+const boom = require('boom')
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+const bookRouter = require('./routes/book')
 
 var app = express();
 app.use(jwtAuth) //jwt验证
@@ -23,7 +24,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 app.use('/api/user', usersRouter);
+app.use('/api/book', bookRouter);
 app.use('/api/', indexRouter);
+
 
 /**
  * 集中处理404请求的中间件

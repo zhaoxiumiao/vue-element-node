@@ -6,6 +6,7 @@ const {login, findUser} = require('../controller/user');
 const {body, validationResult} = require('express-validator')
 const boom = require('boom')
 const jwt = require('jsonwebtoken')
+const {decoded} = require('../utils/decoded')
 const {JWT_EXPIRED, PRIVATE_KEY} = require('../utils/constant')
 
 
@@ -42,16 +43,21 @@ function(req, res, next) {
 });
 
 router.get('/info', function(req, res, next){
-  findUser('admin').then(user=>{
-    console.log(user);
-    if(user){
-      user.roles = [user.role]
-      new Result(user, '用户信息查询成功').success(res)
-    }else{
-      new Result('用户信息查询失败').fail(res)
-    }
-  })
-  
+  const decode = decoded(req)
+  console.log(decode, '1111');
+  if(decode && decode.username){
+    findUser(decode.username).then(user=>{
+      console.log(user);
+      if(user){
+        user.roles = [user.role] 
+        new Result(user, '用户信息查询成功').success(res)
+      }else{
+        new Result('用户信息查询失败').fail(res)
+      }
+    })
+  }else{
+    new Result('用户信息查询失败').fail(res)
+  }
 })
 
 
