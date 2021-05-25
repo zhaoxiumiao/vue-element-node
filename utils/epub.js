@@ -746,14 +746,30 @@ class EPub extends EventEmitter {
      **/
     getImage(id, callback) {
         if (this.manifest[id]) {
-
             if ((this.manifest[id]['media-type'] || "").toLowerCase().trim().substr(0, 6)  !=  "image/") {
                 return callback(new Error("Invalid mime type for image"));
             }
 
             this.getFile(id, callback);
         } else {
-            callback(new Error("File not found"));
+            //Object.keys是进行数组转换这个数组由key值组成
+            //find方法数组便利
+            //这个地方是自己添加的
+            const coverId = Object.keys(this.manifest).find(key => {
+                if(this.manifest[key].id === 'cover'){
+                    return true
+                }else if(this.manifest[key].properties === 'cover-image'){
+                    return true
+                }
+                return false
+            })
+            // console.log(coverId);
+            if(coverId){
+                this.getFile(coverId, callback);
+            }else{
+                callback(new Error("File not found"));
+            }
+            
         }
     };
 
