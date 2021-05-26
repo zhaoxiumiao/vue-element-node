@@ -5,6 +5,8 @@ const router = express.Router()
 const {UPLOAD_PATH} = require('../utils/constant')
 const Book = require('../models/Book')
 const boom = require('boom')
+const {decoded} = require('../utils/decoded')
+const {insertBook} = require('../controller/book')
 
 router.post('/upload',
 multer({dest: `${UPLOAD_PATH}/book`}).single('file'),
@@ -17,10 +19,23 @@ multer({dest: `${UPLOAD_PATH}/book`}).single('file'),
             console.log('book',book);
             new Result(book, '上传成功').success(res)
         }).catch(err => {
-            next(boom.badImplementation(err))
+            next(boom.badImplementation(err)) //返回500status
         })
-        
     }
+})
+
+router.post('/create',function(req,res,next){
+    const decode = decoded(req)
+    if(decode && decode.username){
+        req.body.username = decode.username
+    }
+    const book = new Book(null, req.body)
+    insertBook(book).then(() => {
+        new Result('添加电子书成功').success(res)
+    }).catch(err=>{
+        next(boom.badImplementation(err))
+    })
+    console.log('book', book);
 })
 
 module.exports = router
