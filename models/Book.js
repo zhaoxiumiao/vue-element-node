@@ -238,17 +238,7 @@ class Book {
                                 // console.log(chapter);
                                 chapters.push(chapter)
                             })
-                            const chapterTree = []
-                            chapters.forEach(c => {
-                                c.children = []
-                                if(c.pid === ''){
-                                    chapterTree.push(c)
-                                } else{
-                                    const parent = chapters.find(_=> _.navId === c.pid)
-                                    // console.log('parent', parent);
-                                    parent.children.push(c)
-                                }
-                            })
+                            const chapterTree = Book.genContentsTree(chapters)
                             
                             resolve({chapters, chapterTree})
                             // console.log(newNavMap === navMap.navPoint);
@@ -316,6 +306,37 @@ class Book {
             return fs.existsSync(path)
         }else{
             return fs.existsSync(Book.genPath(path))
+        }
+    }
+    static genCoverUrl(book) {
+        if(+book.updateType === 1){
+            const { cover } = book
+            if(cover) {
+                if(cover.startsWith('/')){
+                    return `${UPLOAD_URL}${cover}`
+                }else{
+                    return `${UPLOAD_URL}/${cover}`
+                }
+            }else{
+                return null
+            }
+        }
+    }
+    
+    static genContentsTree(contents){
+        if(contents){
+            const contentsTree = []
+            contents.forEach(c => {
+                c.children = []
+                if(c.pid === ''){
+                    contentsTree.push(c)
+                } else{
+                    const parent = contents.find(_=> _.navId === c.pid)
+                    // console.log('parent', parent);
+                    parent.children.push(c)
+                }
+            })
+            return contentsTree
         }
     }
 }

@@ -65,8 +65,36 @@ function insert (model, tableName){
     })
 }
 
+function update(model, tableName, where){
+    return new Promise((resolve, reject) => {
+        if(!isObject(model)){
+            reject(new Error('插入数据库失败,插入数据非对象'))
+        }else{
+            // insert into a,b values(c,d)
+            // update tableName set a=v1, b=v2 where
+            const entry = []
+            Object.keys(model).forEach(key => {
+                if(model.hasOwnProperty(key)){
+                    entry.push(`\`${key}\`='${model[key]}'`)
+                }
+            })
+            if(entry.length > 0){
+                let sql = `UPDATE \`${tableName}\` SET`
+                sql = `${sql} ${entry.join(',')} ${where}`
+                console.log(sql);
+                querySql(sql).then(result=>{
+                    resolve(result)
+                }).catch(e=>{
+                    reject(e);
+                })
+            }
+        }
+    })
+}
+
 module.exports = {
     querySql,
     queryOne,
-    insert
+    insert,
+    update
 }
