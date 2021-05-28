@@ -6,7 +6,7 @@ const {UPLOAD_PATH} = require('../utils/constant')
 const Book = require('../models/Book')
 const boom = require('boom')
 const {decoded} = require('../utils/decoded')
-const {insertBook, getBook, updateBook, getCategory} = require('../controller/book')
+const {insertBook, getBook, updateBook, getCategory, listBook, deleteBook} = require('../controller/book')
 
 router.post('/upload',
 multer({dest: `${UPLOAD_PATH}/book`}).single('file'),
@@ -73,11 +73,25 @@ router.get('/category',function(req, res, next){
 })
 
 router.get('/list',function(req, res, next){
-    listBook(req.query).then(category=>{
-        new Result( '获取图书列表成功').success(res)
+    listBook(req.query).then(({list,count, page, pageSize})=>{
+        new Result({list,count, page:+page, pageSize:+pageSize}, '获取图书列表成功').success(res)
     }).catch(err => {
         next(boom.badImplementation(err))
     })
+})
+
+router.get('/delete', function(req, res, next){
+    const {fileName} = req.query
+    if(!fileName){
+        next(boom.badRequest(new Error('参数fileName不能为空')))
+
+    }else{
+        deleteBook(fileName).then(() => {
+            new Result('删除图书信息成功').success(res)
+        }).catch(err => {
+            next(boom.badImplementation(err))
+        })
+    }
 })
 
 
