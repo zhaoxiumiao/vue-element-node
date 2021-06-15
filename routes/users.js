@@ -8,6 +8,7 @@ const boom = require('boom')
 const jwt = require('jsonwebtoken')
 const {decoded} = require('../utils/decoded')
 const {JWT_EXPIRED, PRIVATE_KEY} = require('../utils/constant')
+const jwtAuth = require('./jwt')
 
 
 /* GET users listing. */
@@ -60,6 +61,6 @@ router.get('/info', function(req, res, next){
   }
 })
 
-
+router.use(jwtAuth)
 
 module.exports = router;

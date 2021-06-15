@@ -68,7 +68,7 @@ function insertBook(book) {
 function getBook(fileName){
     return new Promise(async (resolve, reject) => {
         const bookSql = `select * from book where fileName='${fileName}'`
-        const contentSql = `select * from contents where fileName='${fileName}' ORDER BY \`order\`+0`
+        const contentSql = `select * from \`contents\` where fileName='${fileName}' ORDER BY \`order\``
         const book = await queryOne(bookSql)
         const contents = await querySql(contentSql)
         if(book){

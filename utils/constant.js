@@ -1,8 +1,8 @@
 const {env} = require('./env')
 
-const UPLOAD_PATH = env === 'dev' ? 'D:/data/nginx/upload/admin-upload-ebook':''
+const UPLOAD_PATH = env === 'dev' ? 'D:/data/nginx/upload/admin-upload-ebook':'/root/www/upload/admin-upload-ebook'
 
-const UPLOAD_URL = env === 'dev' ? 'http://localhost:8089/admin-upload-ebook': ''
+const UPLOAD_URL = env === 'dev' ? 'http://localhost:8089/admin-upload-ebook': 'http://www.fool.ink:8089/'
 
 
 module.exports = {

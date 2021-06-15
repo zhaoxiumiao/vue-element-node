@@ -10,7 +10,7 @@ var usersRouter = require('./routes/users');
 const bookRouter = require('./routes/book')
 
 var app = express();
-app.use(jwtAuth) //jwt验证
+// app.use(jwtAuth) //jwt验证
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

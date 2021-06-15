@@ -7,6 +7,7 @@ const Book = require('../models/Book')
 const boom = require('boom')
 const {decoded} = require('../utils/decoded')
 const {insertBook, getBook, updateBook, getCategory, listBook, deleteBook} = require('../controller/book')
+const jwtAuth = require('./jwt')
 
 router.post('/upload',
 multer({dest: `${UPLOAD_PATH}/book`}).single('file'),
@@ -94,6 +95,6 @@ router.get('/delete', function(req, res, next){
     }
 })
 
-
+router.use(jwtAuth)
 
 module.exports = router

@@ -14,6 +14,7 @@ function genPassword(password){
     const str = `${password}${SECRET_KEY}`
     return md5(str)
 }
+// console.log(genPassword(''));
 
 module.exports = {
     genPassword
